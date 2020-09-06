@@ -1,68 +1,30 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The UI shows 2 users, indicated by colored boxes. Each of them can start streaming from a Master by pressing `start master`. They can then add streams to any peerConnections made across the active signaling channel which they are streaming from. Initially no peerConnections have been made. Other users can connect to this signaling channel with Viewers and establish peerConnections.
 
-## Available Scripts
+## Description
+Upon removing stream from established peerConnection, renegotiation is required, and attempted. This starts with the Master creating an SDP offer, setting it's local description equal to it, and then sending that SDP offer to the peer. 
 
-In the project directory, you can run:
+### Expected behavior
+Viewer receives SDP offer from master and completes negotiation. 
 
-### `npm start`
+### Actual behaviour
+Upon sending SDP offer to user 2's viewer (with clientId "id-2s_VIEWER_of_<CHANNEL_NAME>"), the Master immediately receives an SDP offer from a client with id "AWS_DEFAULT_SINGLE_MASTER". 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Steps to reproduce current issues:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### SETUP
+1. Pull this repo
+2. add identity pool with kinesis permissions and user pool to Amplify configuration in App.js
+3. Create some signaling channels called "streamline-1" and "streamline-2" in kinesis video streams
+3. run `npm install` followed by `npm start`
 
-### `npm test`
+### AFTER
+1. Start user 1's master.
+2. Add webcam to that stream
+3. User 2 connects to user 1 (click `connect to `)
+4. User 1 removes webcam from that peerConnection
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Checks
+Upon connecting user 2's viewer to user 1 you should see the webcam feed of yourself appear in a new box at the bottom of user 2
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
